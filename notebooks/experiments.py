@@ -48,9 +48,9 @@ def run_all_experiments():
     print("=" * 60)
     print("1. LOADING DATASETS & ANALYZING CHARACTERISTICS")
     print("=" * 60)
-    X_uci, y_uci = load_uci_dataset(synthetic=True)
-    X_bonn, y_bonn = load_bonn_dataset(synthetic=True)
-    X_chb, y_chb = load_chb_mit_subset(synthetic=True)
+    X_uci, y_uci = load_uci_dataset(synthetic=False)
+    X_bonn, y_bonn = load_bonn_dataset(synthetic=False)
+    X_chb, y_chb = load_chb_mit_subset(synthetic=False)
 
     dataset_summary = pd.DataFrame({
         'Dataset': ['UCI Seizure Recognition', 'Bonn University EEG', 'CHB-MIT Scalp EEG'],\
@@ -146,6 +146,15 @@ def run_all_experiments():
     print("4. REGULARIZATION PERFORMANCE & SPARSITY STUDY")
     print("=" * 60)
     
+    X_bonn_prep = get_pipeline_b(n_components=0.90).fit_transform(X_bonn, y_bonn)
+    X_chb_prep = get_pipeline_b(n_components=0.90).fit_transform(X_chb, y_chb)
+
+    print("--- Dataset Features Fed to Machine Learning Models ---")
+    print(f"UCI Seizure: Raw Shape = {X_uci.shape} -> Preprocessed Features Shape = {X_uci_prep.shape} ({X_uci_prep.shape[1]} features)")
+    print(f"Bonn EEG:    Raw Shape = {X_bonn.shape} -> Preprocessed Features Shape = {X_bonn_prep.shape} ({X_bonn_prep.shape[1]} features)")
+    print(f"CHB-MIT:     Raw Shape = {X_chb.shape}  -> Preprocessed Features Shape = {X_chb_prep.shape} ({X_chb_prep.shape[1]} features)")
+    print("-" * 60 + "\n")
+
     def run_reg_study(name, X, y):
         results = []
         for p in ['l1', 'l2', 'elasticnet']:
@@ -161,9 +170,6 @@ def run_all_experiments():
                 'PR-AUC': metrics['pr_auc'], 'Sparsity (%)': sparsity
             })
         return results
-
-    X_bonn_prep = get_pipeline_b(n_components=0.90).fit_transform(X_bonn, y_bonn)
-    X_chb_prep = get_pipeline_b(n_components=0.90).fit_transform(X_chb, y_chb)
 
     reg_results = []
     reg_results.extend(run_reg_study("UCI Seizure", X_uci_prep, y_uci))
