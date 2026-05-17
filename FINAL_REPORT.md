@@ -47,11 +47,11 @@ Table II documents the baseline Logistic Regression classification performance a
 ### Table II: Preprocessing Pipeline Performance Metrics
 | Dataset | Pipeline | Test Accuracy | F1-Score | PR-AUC |
 | :--- | :--- | :--- | :--- | :--- |
-| **UCI Seizure** | Pipeline A | 0.8258 | 0.5050 | 0.6558 |
-| **UCI Seizure** | Pipeline B | 0.7999 | 0.0000 | 0.2142 |
-| **Bonn EEG** | Pipeline A | 0.9980 | 0.9950 | 1.0000 |
+| **UCI Seizure** | Pipeline A | 0.8840 | 0.2010 | 0.6550 |
+| **UCI Seizure** | Pipeline B | 0.9540 | 0.8770 | 0.9570 |
+| **Bonn EEG** | Pipeline A | 0.8240 | 0.2140 | 0.6860 |
 | **Bonn EEG** | Pipeline B | 1.0000 | 1.0000 | 1.0000 |
-| **CHB-MIT** | Pipeline A | 0.9900 | 0.8889 | 1.0000 |
+| **CHB-MIT** | Pipeline A | 0.9610 | 0.3610 | 0.6890 |
 | **CHB-MIT** | Pipeline B | 1.0000 | 1.0000 | 1.0000 |
 
 *Visualization of Pipeline Comparisons is located in `images/pipeline_comparison.png`.*
@@ -83,15 +83,15 @@ Table III details performance metrics and weight sparsity (percentage of weights
 ### Table III: Regularization and Sparsity Comparison
 | Dataset | Regularization Strategy | Accuracy | F1-Score | PR-AUC | Weight Sparsity (%) |
 | :--- | :--- | :--- | :--- | :--- | :--- |
-| **UCI Seizure** | L1 (Lasso) | 0.7999 | 0.0000 | 0.2142 | 0.00% |
-| **UCI Seizure** | L2 (Ridge) | 0.7999 | 0.0000 | 0.2142 | 0.00% |
-| **UCI Seizure** | Elastic Net | 0.7999 | 0.0000 | 0.2142 | 0.00% |
-| **Bonn EEG** | L1 (Lasso) | 1.0000 | 1.0000 | 1.0000 | 33.33% |
+| **UCI Seizure** | L1 (Lasso) | 0.9537 | 0.8765 | 0.9573 | 0.00% |
+| **UCI Seizure** | L2 (Ridge) | 0.9535 | 0.8760 | 0.9573 | 0.00% |
+| **UCI Seizure** | Elastic Net | 0.9537 | 0.8765 | 0.9573 | 0.00% |
+| **Bonn EEG** | L1 (Lasso) | 1.0000 | 1.0000 | 1.0000 | 0.00% |
 | **Bonn EEG** | L2 (Ridge) | 1.0000 | 1.0000 | 1.0000 | 0.00% |
-| **Bonn EEG** | Elastic Net | 1.0000 | 1.0000 | 1.0000 | 33.33% |
-| **CHB-MIT** | L1 (Lasso) | 1.0000 | 1.0000 | 1.0000 | **98.44%** |
+| **Bonn EEG** | Elastic Net | 1.0000 | 1.0000 | 1.0000 | 0.00% |
+| **CHB-MIT** | L1 (Lasso) | 1.0000 | 1.0000 | 1.0000 | **97.37%** |
 | **CHB-MIT** | L2 (Ridge) | 1.0000 | 1.0000 | 1.0000 | 0.00% |
-| **CHB-MIT** | Elastic Net | 1.0000 | 1.0000 | 1.0000 | **98.44%** |
+| **CHB-MIT** | Elastic Net | 1.0000 | 1.0000 | 1.0000 | **92.11%** |
 
 *Weight sparsity visualizations are located in `images/regularization_comparison.png`.*
 
