@@ -6,34 +6,38 @@ This project explores the effects of preprocessing, model complexity, and regula
 
 We have selected three diverse EEG-based datasets to ensure robustness:
 
-### A. UCI Epileptic Seizure Recognition Dataset
+### A. Epileptic Seizure Recognition Dataset
+- **Function**: `load_epileptic_seizure_recognition()`
 - **Justification**: 
-    - **Size**: 11,500 samples (23.5 seconds each, sampled at 174Hz).
-    - **Class Imbalance**: Original dataset has 5 classes (Seizure, Tumor area, Healthy area, Eyes closed, Eyes open). Often binarized (Seizure vs Rest).
-    - **Feature Characteristics**: Extracted features (178 dimensions) representing the time series.
+    - **Size**: 11,500 samples.
+    - **Class Imbalance**: Original dataset has 5 classes. Binarized to class 1 (seizure, 20.00%) vs classes 2-5 (non-seizure, 80.00%).
+    - **Feature Characteristics**: Extracted tabular features (178 dimensions).
     - **Why**: Excellent for testing model complexity on structured, preprocessed data.
 
-### B. CHB-MIT Scalp EEG Database
+### B. BEED (Bangalore EEG Epilepsy Dataset)
+- **Function**: `load_beed_dataset()`
 - **Justification**:
-    - **Size**: Large-scale (24 pediatric subjects, hundreds of hours of recording).
-    - **Class Imbalance**: Highly imbalanced (seizures are rare events).
-    - **Feature Characteristics**: Raw time-series (scalp EEG, 22-23 channels).
-    - **Why**: Represents real-world clinical scenarios with significant noise and imbalance.
+    - **Size**: 8,000 samples.
+    - **Class Imbalance**: Balanced (50.00% seizure ratio: 4,000 positive, 4,000 negative).
+    - **Feature Characteristics**: Multi-channel EEG (16 channels, X1-X16).
+    - **Why**: Captures clinical multi-electrode records across adult subjects, perfect for evaluating multi-channel spatial mappings.
 
-### C. Bonn University EEG Dataset
+### C. CHB-MIT Seizure Dataset (NPZ)
+- **Function**: `load_chb_mit_npz()`
 - **Justification**:
-    - **Size**: 500 segments (100 per set A-E).
-    - **Class Imbalance**: Balanced segments.
-    - **Feature Characteristics**: Clean segments of time-series data.
-    - **Why**: Allows for controlled testing of "clean" signal processing vs clinical data.
+    - **Size**: 1,000 samples selected from the clinical validation set (`eeg-seizure_val.npz`).
+    - **Class Imbalance**: Extremely imbalanced (exactly 5.00% seizure ratio: 50 positive, 950 negative) to replicate clinical rare-event scenarios.
+    - **Feature Characteristics**: Raw continuous EEG multi-channel waves (23 channels $\times$ 256 timepoints).
+    - **Why**: Represents realistic, high-noise clinical settings with severe imbalance, acting as our class imbalance testbed.
 
 ## 2. Preprocessing Pipelines
 
 - **Pipeline A**: Normalization → Noise removal (Butterworth) → Feature selection.
-- **Pipeline B**: Feature extraction (STFT/Wavelets) → Scaling → PCA.
+- **Pipeline B**: Feature extraction (Mean, Std, Max, Min, Energy) → Scaling → PCA.
 
 ## 3. Modeling
 
 - **Core Model**: Logistic Regression.
 - **Regularization**: L1 (Lasso), L2 (Ridge), Elastic Net.
 - **Imbalance Handling**: SMOTE, Undersampling, Class Weighting.
+

@@ -36,7 +36,7 @@ src_dir = os.path.join(os.path.dirname(current_dir), 'src')
 if src_dir not in sys.path:
     sys.path.append(src_dir)
 
-from data_loader import load_uci_dataset, load_chb_mit_subset, load_bonn_dataset
+from data_loader import load_epileptic_seizure_recognition, load_chb_mit_npz, load_beed_dataset
 from preprocessing import get_pipeline_a, get_pipeline_b
 from models import get_logistic_regression_model, calculate_metrics, handle_imbalance
 from analysis import plot_learning_curve, plot_regularization_comparison, plot_imbalance_comparison
@@ -48,12 +48,12 @@ def run_all_experiments():
     print("=" * 60)
     print("1. LOADING DATASETS & ANALYZING CHARACTERISTICS")
     print("=" * 60)
-    X_uci, y_uci = load_uci_dataset(synthetic=False)
-    X_bonn, y_bonn = load_bonn_dataset(synthetic=False)
-    X_chb, y_chb = load_chb_mit_subset(synthetic=False)
+    X_uci, y_uci = load_epileptic_seizure_recognition(synthetic=False)
+    X_bonn, y_bonn = load_beed_dataset(synthetic=False)
+    X_chb, y_chb = load_chb_mit_npz(synthetic=False)
 
     dataset_summary = pd.DataFrame({
-        'Dataset': ['UCI Seizure Recognition', 'Bonn University EEG', 'CHB-MIT Scalp EEG'],\
+        'Dataset': ['Epileptic Seizure Recognition', 'BEED (Bangalore EEG)', 'CHB-MIT Seizure (NPZ)'],\
         'Total Samples': [X_uci.shape[0], X_bonn.shape[0], X_chb.shape[0]],
         'Raw Dimensions': [X_uci.shape[1:], X_bonn.shape[1:], X_chb.shape[1:]],
         'Seizure Samples': [np.sum(y_uci), np.sum(y_bonn), np.sum(y_chb)],
@@ -62,7 +62,7 @@ def run_all_experiments():
             (np.sum(y_bonn) / len(y_bonn)) * 100,
             (np.sum(y_chb) / len(y_chb)) * 100
         ],
-        'Feature Type': ['Tabular / Extracted', 'Single-Channel Time-Series', 'Multi-Channel (22) Time-Series']
+        'Feature Type': ['Tabular / Extracted', 'Multi-Channel (16) EEG', 'Multi-Channel (23) Time-Series']
     })
     print(dataset_summary.to_string(index=False))
     print("\n")
@@ -92,9 +92,9 @@ def run_all_experiments():
             'Pipe B Acc': metrics_b['accuracy'], 'Pipe B F1': metrics_b['f1_score'], 'Pipe B PR-AUC': metrics_b['pr_auc']
         }
 
-    res_uci = evaluate_pipeline("UCI Seizure", X_uci, y_uci, get_pipeline_a(n_features=20), get_pipeline_b(n_components=0.95))
-    res_bonn = evaluate_pipeline("Bonn EEG", X_bonn, y_bonn, get_pipeline_a(n_features=5), get_pipeline_b(n_components=0.90))
-    res_chb = evaluate_pipeline("CHB-MIT", X_chb, y_chb, get_pipeline_a(n_features=10), get_pipeline_b(n_components=0.90))
+    res_uci = evaluate_pipeline("Epileptic Seizure", X_uci, y_uci, get_pipeline_a(n_features=20), get_pipeline_b(n_components=0.95))
+    res_bonn = evaluate_pipeline("BEED EEG", X_bonn, y_bonn, get_pipeline_a(n_features=5), get_pipeline_b(n_components=0.90))
+    res_chb = evaluate_pipeline("CHB-MIT (NPZ)", X_chb, y_chb, get_pipeline_a(n_features=10), get_pipeline_b(n_components=0.90))
     
     pipeline_df = pd.DataFrame([res_uci, res_bonn, res_chb])
     print(pipeline_df.to_string(index=False))
@@ -150,9 +150,9 @@ def run_all_experiments():
     X_chb_prep = get_pipeline_b(n_components=0.90).fit_transform(X_chb, y_chb)
 
     print("--- Dataset Features Fed to Machine Learning Models ---")
-    print(f"UCI Seizure: Raw Shape = {X_uci.shape} -> Preprocessed Features Shape = {X_uci_prep.shape} ({X_uci_prep.shape[1]} features)")
-    print(f"Bonn EEG:    Raw Shape = {X_bonn.shape} -> Preprocessed Features Shape = {X_bonn_prep.shape} ({X_bonn_prep.shape[1]} features)")
-    print(f"CHB-MIT:     Raw Shape = {X_chb.shape}  -> Preprocessed Features Shape = {X_chb_prep.shape} ({X_chb_prep.shape[1]} features)")
+    print(f"Epileptic Seizure: Raw Shape = {X_uci.shape} -> Preprocessed Features Shape = {X_uci_prep.shape} ({X_uci_prep.shape[1]} features)")
+    print(f"BEED EEG:          Raw Shape = {X_bonn.shape} -> Preprocessed Features Shape = {X_bonn_prep.shape} ({X_bonn_prep.shape[1]} features)")
+    print(f"CHB-MIT (NPZ):     Raw Shape = {X_chb.shape}  -> Preprocessed Features Shape = {X_chb_prep.shape} ({X_chb_prep.shape[1]} features)")
     print("-" * 60 + "\n")
 
     def run_reg_study(name, X, y):
@@ -172,9 +172,9 @@ def run_all_experiments():
         return results
 
     reg_results = []
-    reg_results.extend(run_reg_study("UCI Seizure", X_uci_prep, y_uci))
-    reg_results.extend(run_reg_study("Bonn EEG", X_bonn_prep, y_bonn))
-    reg_results.extend(run_reg_study("CHB-MIT", X_chb_prep, y_chb))
+    reg_results.extend(run_reg_study("Epileptic Seizure", X_uci_prep, y_uci))
+    reg_results.extend(run_reg_study("BEED EEG", X_bonn_prep, y_bonn))
+    reg_results.extend(run_reg_study("CHB-MIT (NPZ)", X_chb_prep, y_chb))
     
     reg_df = pd.DataFrame(reg_results)
     print(reg_df.to_string(index=False))
