@@ -1,0 +1,29 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+.venv/
+env/
+.env/
+
+# Data
+data/
+*.csv
+*.edf
+*.mat
+*.npy
+*.npz
+
+# Notebooks
+.ipynb_checkpoints/
+
+# IDEs
+.vscode/
+.idea/
+
+# Reports and Presentations
+*.docx
+*.pdf
+*.pptx
+
